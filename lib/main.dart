@@ -43,6 +43,8 @@ class _MyHomePageState extends State<MyHomePage> {
   LocationData locationData;
   Stream stream;
 
+  Coordinates townCoordinates;
+
   @override
   void initState(){
     // TODO: implement initState
@@ -50,7 +52,7 @@ class _MyHomePageState extends State<MyHomePage> {
     getSharedPref();
     location = new Location();
     initLocation();
-    listenToStream();
+    //listenToStream();
   }
 
   @override
@@ -114,6 +116,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   onTap: () {
                     setState(() {
                       town = towns[i-2];
+                      coordinatesFromCity();
                     });
                     Navigator.pop(context);
                   },
@@ -163,6 +166,20 @@ class _MyHomePageState extends State<MyHomePage> {
       Coordinates coordinates = new Coordinates(locationData.latitude, locationData.longitude);
       final cityName = await Geocoder.local.findAddressesFromCoordinates(coordinates);
       print('City: ${cityName.first.featureName}');
+    }
+  }
+
+  coordinatesFromCity() async{
+    if(town != null){
+      List<Address> addresses = await Geocoder.local.findAddressesFromQuery(town);
+      if(addresses.length > 0){
+        Address first = addresses.first;
+        Coordinates coordinates = first.coordinates;
+        setState(() {
+          townCoordinates = coordinates;
+          print(townCoordinates);
+        });
+      }
     }
   }
 
