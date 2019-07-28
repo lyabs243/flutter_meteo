@@ -49,6 +49,14 @@ class _MyHomePageState extends State<MyHomePage> {
     getSharedPref();
     location = new Location();
     initLocation();
+    listenToStream();
+  }
+
+  listenToStream(){
+    stream = location.onLocationChanged();
+    stream.listen((newLocation){
+      print('New Location: ${locationData.latitude} / ${locationData.longitude}');
+    });
   }
 
   initLocation() async{
