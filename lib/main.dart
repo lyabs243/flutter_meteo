@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/services.dart';
 import 'package:location/location.dart';
+import 'package:geocoder/geocoder.dart';
 
 void main(){
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
@@ -50,23 +51,6 @@ class _MyHomePageState extends State<MyHomePage> {
     location = new Location();
     initLocation();
     listenToStream();
-  }
-
-  listenToStream(){
-    stream = location.onLocationChanged();
-    stream.listen((newLocation){
-      print('New Location: ${locationData.latitude} / ${locationData.longitude}');
-    });
-  }
-
-  initLocation() async{
-    try{
-      locationData = await location.getLocation();
-      print('Localization: ${locationData.latitude} / ${locationData.longitude}');
-    }
-    catch(e){
-      print('Location error: $e');
-    }
   }
 
   @override
@@ -147,6 +131,39 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ),
     );
+  }
+
+  listenToStream(){
+    stream = location.onLocationChanged();
+    stream.listen((newLocation){
+      if(locationData != null && (locationData.latitude != newLocation.latitude
+          && locationData.longitude != newLocation.longitude)) {
+        print('New Location: ${newLocation.latitude} / ${newLocation.longitude}');
+        setState(() {
+          locationData = newLocation;
+          locationToString();
+        });
+      }
+    });
+  }
+
+  initLocation() async{
+    try{
+      locationData = await location.getLocation();
+      print('Localization: ${locationData.latitude} / ${locationData.longitude}');
+      locationToString();
+    }
+    catch(e){
+      print('Location error: $e');
+    }
+  }
+
+  locationToString() async{
+    if(locationData != null){
+      Coordinates coordinates = new Coordinates(locationData.latitude, locationData.longitude);
+      final cityName = await Geocoder.local.findAddressesFromCoordinates(coordinates);
+      print('City: ${cityName.first.featureName}');
+    }
   }
 
   Text textWithStyle(String title,{color: Colors.white,fontSize: 18.0,fontStyle: FontStyle.italic,textAlign: TextAlign.center,textScaleFactor: 1.0}){
