@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/services.dart';
+import 'package:location/location.dart';
 
 void main(){
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
@@ -37,11 +38,27 @@ class _MyHomePageState extends State<MyHomePage> {
   List<String> towns = [];
   String keyList = 'towns';
 
+  Location location;
+  LocationData locationData;
+  Stream stream;
+
   @override
-  void initState() {
+  void initState(){
     // TODO: implement initState
     super.initState();
     getSharedPref();
+    location = new Location();
+    initLocation();
+  }
+
+  initLocation() async{
+    try{
+      locationData = await location.getLocation();
+      print('Localization: ${locationData.latitude} / ${locationData.longitude}');
+    }
+    catch(e){
+      print('Location error: $e');
+    }
   }
 
   @override
