@@ -168,7 +168,7 @@ class _MyHomePageState extends State<MyHomePage> {
             locationData.latitude, locationData.longitude);
         final cityName = await Geocoder.local.findAddressesFromCoordinates(
             coordinates);
-        print('City: ${cityName.first.featureName}');
+        print('City: ${cityName.first.locality}');
       }
       catch(e){
         print('Error $e');
