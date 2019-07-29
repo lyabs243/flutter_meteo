@@ -163,9 +163,16 @@ class _MyHomePageState extends State<MyHomePage> {
 
   locationToString() async{
     if(locationData != null){
-      Coordinates coordinates = new Coordinates(locationData.latitude, locationData.longitude);
-      final cityName = await Geocoder.local.findAddressesFromCoordinates(coordinates);
-      print('City: ${cityName.first.featureName}');
+      try {
+        Coordinates coordinates = new Coordinates(
+            locationData.latitude, locationData.longitude);
+        final cityName = await Geocoder.local.findAddressesFromCoordinates(
+            coordinates);
+        print('City: ${cityName.first.featureName}');
+      }
+      catch(e){
+        print('Error $e');
+      }
     }
   }
 
