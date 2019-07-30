@@ -3,6 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/services.dart';
 import 'package:location/location.dart';
 import 'package:geocoder/geocoder.dart';
+import 'package:http/http.dart' as http;
 
 void main(){
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
@@ -96,6 +97,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   onTap: (){
                     setState(() {
                       town = null;
+                      townCoordinates = null;
                     });
                     Navigator.pop(context);
                   },
@@ -168,7 +170,7 @@ class _MyHomePageState extends State<MyHomePage> {
             locationData.latitude, locationData.longitude);
         final cityName = await Geocoder.local.findAddressesFromCoordinates(
             coordinates);
-        print('City: ${cityName.first.locality}');
+        api();
       }
       catch(e){
         print('Error $e');
@@ -184,8 +186,35 @@ class _MyHomePageState extends State<MyHomePage> {
         Coordinates coordinates = first.coordinates;
         setState(() {
           townCoordinates = coordinates;
-          print(townCoordinates);
+          api();
         });
+      }
+    }
+  }
+
+  api() async{
+    double lat;
+    double lon;
+
+    if(townCoordinates != null){
+      lat = townCoordinates.latitude;
+      lon = townCoordinates.longitude;
+    }
+    else if(locationData != null){
+      lat = locationData.latitude;
+      lon = locationData.longitude;
+    }
+
+    if(lat != null && lon != null){
+      final key = '&APPID=bd4b66af5e769c820604a654a7b3dadf';
+      String lang = '&lang=${Localizations.localeOf(context).languageCode}';
+      String baseApi = 'http://api.openweathermap.org/data/2.5/weather?';
+      String coordString = 'lat=$lat&lon=$lon';
+      String units = '&units=metrics';
+      String totalString = baseApi + coordString + lang + units + key;
+      final response = await http.get(totalString);
+      if(response.statusCode == 200){
+        print('${response.body}');
       }
     }
   }
