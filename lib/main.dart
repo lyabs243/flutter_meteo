@@ -258,7 +258,7 @@ class _MyHomePageState extends State<MyHomePage> {
       String lang = '&lang=${Localizations.localeOf(context).languageCode}';
       String baseApi = 'http://api.openweathermap.org/data/2.5/weather?';
       String coordString = 'lat=$lat&lon=$lon';
-      String units = '&units=metrics';
+      String units = '&units=metric';
       String totalString = baseApi + coordString + lang + units + key;
       final response = await http.get(totalString);
       if(response.statusCode == 200){
