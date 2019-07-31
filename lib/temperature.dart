@@ -16,7 +16,7 @@ class Temperature{
     main = weatherMap['main'];
     description = weatherMap['description'];
     icon = weatherMap['icon'];
-    Map mainMap = weatherMap['main'];
+    Map mainMap = map['main'];
     temp = mainMap['temp'];
     pressure = mainMap['pressure'];
     humidity = mainMap['humidity'];
