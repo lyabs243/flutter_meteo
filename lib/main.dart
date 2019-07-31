@@ -50,6 +50,10 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Temperature temperature;
 
+  AssetImage night = new AssetImage('assets/n.jpg');
+  AssetImage sun = new AssetImage('assets/d1.jpg');
+  AssetImage rain = new AssetImage('assets/d2.jpg');
+
   @override
   void initState(){
     // TODO: implement initState
@@ -57,7 +61,7 @@ class _MyHomePageState extends State<MyHomePage> {
     getSharedPref();
     location = new Location();
     initLocation();
-    //listenToStream();
+    listenToStream();
   }
 
   @override
@@ -133,12 +137,26 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ),
       ),
-      body: Center(
-        child: new Text(
-          (town!= null)? town : 'Current Town',
-          textScaleFactor: 3.0,
-        ),
-      ),
+      body: (temperature == null)?
+        Center(
+          child: new Text(
+            (town!= null)? town : 'Current Town',
+            textScaleFactor: 3.0,
+          ),
+        )
+      :
+        Container(
+          width: MediaQuery.of(context).size.width,
+          height: MediaQuery.of(context).size.height,
+          decoration: new BoxDecoration(
+            image: new DecorationImage
+            (
+              image: getBackground(),
+              fit: BoxFit.cover,
+            ),
+          ),
+        )
+      ,
     );
   }
 
@@ -193,6 +211,19 @@ class _MyHomePageState extends State<MyHomePage> {
           api();
         });
       }
+    }
+  }
+
+  AssetImage getBackground(){
+    print(temperature.icon);
+    if(temperature.icon.contains('n')){
+      return night;
+    }
+    else if(temperature.icon.contains('01') || temperature.icon.contains('02') || temperature.icon.contains('03')){
+      return sun;
+    }
+    else{
+      return rain;
     }
   }
 
