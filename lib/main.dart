@@ -155,8 +155,21 @@ class _MyHomePageState extends State<MyHomePage> {
               fit: BoxFit.cover,
             ),
           ),
-        )
-      ,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: <Widget>[
+              textWithStyle((town == null)? 'Current Town' : town,fontSize: 40.0),
+              textWithStyle(temperature.description, fontSize: 30.0),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+                  Image.asset('assets/weather/${temperature.icon.substring(0,2)}.png'),
+                  textWithStyle('${temperature.temp.toInt()} C', fontSize: 70.0),
+                ],
+              ),
+            ],
+          ),
+        ),
     );
   }
 
