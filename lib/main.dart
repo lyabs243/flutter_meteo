@@ -4,6 +4,8 @@ import 'package:flutter/services.dart';
 import 'package:location/location.dart';
 import 'package:geocoder/geocoder.dart';
 import 'package:http/http.dart' as http;
+import 'temperature.dart';
+import 'dart:convert';
 
 void main(){
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
@@ -45,6 +47,8 @@ class _MyHomePageState extends State<MyHomePage> {
   Stream stream;
 
   Coordinates townCoordinates;
+
+  Temperature temperature;
 
   @override
   void initState(){
@@ -214,7 +218,11 @@ class _MyHomePageState extends State<MyHomePage> {
       String totalString = baseApi + coordString + lang + units + key;
       final response = await http.get(totalString);
       if(response.statusCode == 200){
-        print('${response.body}');
+        Map map = json.decode(response.body);
+        setState(() {
+          temperature = new Temperature(map);
+          print(temperature.description);
+        });
       }
     }
   }
