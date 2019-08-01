@@ -254,20 +254,27 @@ class _MyHomePageState extends State<MyHomePage> {
     }
 
     if(lat != null && lon != null){
-      final key = '&APPID=bd4b66af5e769c820604a654a7b3dadf';
-      String lang = '&lang=${Localizations.localeOf(context).languageCode}';
-      String baseApi = 'http://api.openweathermap.org/data/2.5/weather?';
-      String coordString = 'lat=$lat&lon=$lon';
-      String units = '&units=metric';
-      String totalString = baseApi + coordString + lang + units + key;
-      final response = await http.get(totalString);
-      if(response.statusCode == 200){
-        Map map = json.decode(response.body);
-        setState(() {
-          temperature = new Temperature(map);
-          print(temperature.description);
-        });
+      try {
+        final key = '&APPID=bd4b66af5e769c820604a654a7b3dadf';
+        String lang = '&lang=${Localizations
+            .localeOf(context)
+            .languageCode}';
+        String baseApi = 'http://api.openweathermap.org/data/2.5/weather?';
+        String coordString = 'lat=$lat&lon=$lon';
+        String units = '&units=metric';
+        String totalString = baseApi + coordString + lang + units + key;
+        final response = await http.get(totalString);
+        if (response.statusCode == 200) {
+          Map map = json.decode(response.body);
+          setState(() {
+            temperature = new Temperature(map);
+            print(temperature.description);
+          });
+        }
       }
+      catch(e){
+        print('Erreur: $e');
+    }
     }
   }
 
