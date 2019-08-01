@@ -50,6 +50,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Coordinates townCoordinates;
 
   Temperature temperature;
+  String currentCity = 'Current Town';
 
   AssetImage night = new AssetImage('assets/n.jpg');
   AssetImage sun = new AssetImage('assets/d1.jpg');
@@ -102,7 +103,7 @@ class _MyHomePageState extends State<MyHomePage> {
               }
               else if(i == 1){
                 return new ListTile(
-                  title: textWithStyle('Current Town'),
+                  title: textWithStyle(currentCity),
                   onTap: (){
                     setState(() {
                       town = null;
@@ -141,7 +142,7 @@ class _MyHomePageState extends State<MyHomePage> {
       body: (temperature == null)?
         Center(
           child: new Text(
-            (town!= null)? town : 'Current Town',
+            (town!= null)? town : currentCity,
             textScaleFactor: 3.0,
           ),
         )
@@ -159,7 +160,7 @@ class _MyHomePageState extends State<MyHomePage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
-              textWithStyle((town == null)? 'Current Town' : town,fontSize: 40.0),
+              textWithStyle((town == null)? currentCity : town,fontSize: 40.0),
               textWithStyle(temperature.description, fontSize: 30.0),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -215,7 +216,10 @@ class _MyHomePageState extends State<MyHomePage> {
             locationData.latitude, locationData.longitude);
         final cityName = await Geocoder.local.findAddressesFromCoordinates(
             coordinates);
-        api();
+        setState(() {
+          currentCity = cityName.first.locality;
+          api();
+        });
       }
       catch(e){
         print('Error $e');
