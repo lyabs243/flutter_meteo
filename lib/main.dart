@@ -6,6 +6,7 @@ import 'package:geocoder/geocoder.dart';
 import 'package:http/http.dart' as http;
 import 'temperature.dart';
 import 'dart:convert';
+import 'my_flutter_app_icons.dart';
 
 void main(){
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
@@ -167,6 +168,15 @@ class _MyHomePageState extends State<MyHomePage> {
                   textWithStyle('${temperature.temp.toInt()} C', fontSize: 70.0),
                 ],
               ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+                  extra('${temperature.temp_min} C', MyFlutterApp.up),
+                  extra('${temperature.temp_max} C', MyFlutterApp.down),
+                  extra('${temperature.pressure}', MyFlutterApp.temperatire),
+                  extra('${temperature.humidity}%', MyFlutterApp.drizzle),
+                ],
+              ),
             ],
           ),
         ),
@@ -276,6 +286,20 @@ class _MyHomePageState extends State<MyHomePage> {
         print('Erreur: $e');
     }
     }
+  }
+
+  Column extra(String data,IconData iconData){
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: <Widget>[
+        Icon(
+          iconData,
+          color: Colors.white,
+          size: 32.0,
+        ),
+        textWithStyle(data),
+      ],
+    );
   }
 
   Text textWithStyle(String title,{color: Colors.white,fontSize: 18.0,fontStyle: FontStyle.italic,textAlign: TextAlign.center,textScaleFactor: 1.0}){
